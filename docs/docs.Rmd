@@ -330,13 +330,20 @@ bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
 **`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
 - By default, `month` and `day` are ordinal factor variables (`<ord>`).  
 - What is the default data type for `qtr` (quarter)?
+  
+A. character `<chr>` 
 
-A. character `<chr>`
-B. decimal (double precision) `<dbl>`
-C. factor `<fct>`
-D. integer `<int>`
+B. decimal (double precision) `<dbl>` 
 
-<br>
+C. factor `<fct>` 
+
+D. integer `<int>` 
+
+---
+
+class: middle
+
+***TurningPoint Session ID: bua455s22***
 
 **`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
 
