@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>BUA 455 - Week 5</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Penelope Pooler Eisenbies" />
+    <meta name="date" content="2022-09-27" />
+    <script src="docs_files/header-attrs/header-attrs.js"></script>
+    <link href="docs_files/panelset/panelset.css" rel="stylesheet" />
+    <script src="docs_files/panelset/panelset.js"></script>
+    <link href="docs_files/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="docs_files/tile-view/tile-view.js"></script>
+    <script src="docs_files/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="docs_files/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="docs_files/animate.css/animate.xaringan.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+background-image: url("docs_files/images/sloth_faded.png")
+background-size: cover
+
+class: bottom, right
+
+## BUA 455 - Week 5 - Lecture 9
+
+### Cheat Sheets, Functions, and Review 
+
+&lt;br&gt;
+
+
+#### Penelope Pooler Eisenbies
+
+#### 2022-09-27
+
+[Wikipedia Sloth Page](https://en.wikipedia.org/wiki/Sloth)
+
+---
+
+### Quiz 1 on Thursday 9/29
+
+- Weeks 1 - 4 (Lectures 1 - 8)
+  
+  - Quiz questions will be similar (but not identical) to Practice Questions
+  
+  - Mix of R datasets and imported datasets 
+  
+    - I will provide R code to import data
+    
+    - Quiz Template and data files will be provided in Zipped project 
+    
+    - Review Practice Questions, HW assignments, and Demo Videos
+    
+    - **You will be required to download, unzip, and and save a project to your computer (not in Downloads), as part of Quiz 1.**
+
+
+---
+
+### R Online Resources
+
+- Some of what we have covered: (See Week 4 ofr more complete Review)
+
+  - R projects and file structure
+  
+  - Working R Markdown
+  
+  - Working with 'clean' data using the `dplyr` package
+  
+    `read_csv`, `filter`, `select`, `slice`, `factor`
+    
+  - Augmenting these commands with operators such as `!`, `%in%`, `==`
+  
+  - Using pipes, `|&gt;` to make data management more efficient
+  
+- There are excellent online resources for these topics
+
+- For a reminder of operators Here are two good links:
+  - **[tutorials point](https://www.tutorialspoint.com/r/r_operators.htm)**  
+  - **[Quick-R](https://www.statmethods.net/management/operators.html)**
+  
+Also: you can always google `R Operators`
+    
+- For R Markdown and `dplyr` commands there are R Cheat Sheets
+  - **[Curated List of Text Resources for BUA 455 - Updated 9/26/22](https://docs.google.com/document/d/1qdqO7MTq7scYhFydkJuhA7JIUVQNldNXqMBOspXlNZk/edit?usp=sharing)**
+  
+
+---
+
+
+### Creating a Function
+
+- Any task in R can be converted to a function.
+
+- If you are only doing something once or twice, this is not needed.
+
+- If you are doing the same tasks 5 or more times, this is very useful
+
+- Best Practice:
+
+  - Develop and refine the code to complete your tasks
+  
+  - Subdivide the larger tasks into smaller shorter tasks
+
+#### Aanatomy of a Function:
+
+```
+Function_Name &lt;- function(input_1, input_2, etc){
+   output &lt;- command 1 to do "stuff" to inputs |&gt;
+             command 2 to do "stuff" to inputs |&gt;
+             command 3 to do "stuff" to inputs |&gt; etc.
+   output  # end with name of output so that it is "kicked out" of function
+}
+
+```
+#### Alternate Anatomy for Plot Functions: don't save as an output object within function (see example this lecture)
+
+
+
+
+---
+
+Example and Review: Recall the steps we did to Box Office Mojo data
+
+- Below I show a preview of using the `lubridate` functions to create: 
+  - date variable and month, day, and quarter variables creatd from date
+
+
+```r
+bom21_orig &lt;- read_csv("box_office_mojo_2021_tidy.csv", show_col_types = F) |&gt;
+  mutate(date = ymd(date),                              # converts ymd date text to date var
+         month = month(date, label = T, abbr = T),      # creates month var from date var
+         day = wday(date, label=T, abbr = T),           # creates wkday var from date var
+         qtr = quarter(date),                           # creates quarter var from date var
+         num_releases = as.integer(num_releases),
+         top10grossM = (top10gross/1000000) |&gt; round(2),
+         num1grossM = (num1gross/1000000) |&gt; round(2))
+```
+
+Below, `bom_basic` is a function that completes the tasks above:
+
+```r
+bom_basic &lt;- function(data_file) {
+  d_out &lt;- read_csv(data_file, show_col_types = F) |&gt;
+  mutate(date = ymd(date),
+         month = month(date, label = T, abbr = T),
+         day = wday(date, label=T, abbr = T),
+         qtr = quarter(date),
+         num_releases = as.integer(num_releases),
+         top10grossM = (top10gross/1000000) |&gt; round(2),
+         num1grossM = (num1gross/1000000) |&gt; round(2))
+  d_out
+}
+```
+
+---
+
+### What does the `bom_basic` function do?
+
+.pull-left[
+
+```r
+b21 &lt;- read_csv("box_office_mojo_2021_tidy.csv",
+                show_col_types = F) |&gt;
+  glimpse(width=40)
+```
+
+```
+## Rows: 365
+## Columns: 4
+## $ date         &lt;date&gt; 2021-12-31, 2021…
+## $ top10gross   &lt;dbl&gt; 27601787, 3502147…
+## $ num_releases &lt;dbl&gt; 25, 26, 26, 25, 2…
+## $ num1gross    &lt;dbl&gt; 15407695, 2071790…
+```
+
+]
+
+.pull-right[
+
+```r
+bom21 &lt;- bom_basic("box_office_mojo_2021_tidy.csv") |&gt;
+  glimpse(width=40)
+```
+
+```
+## Rows: 365
+## Columns: 9
+## $ date         &lt;date&gt; 2021-12-31, 2021…
+## $ top10gross   &lt;dbl&gt; 27601787, 3502147…
+## $ num_releases &lt;int&gt; 25, 26, 26, 25, 2…
+## $ num1gross    &lt;dbl&gt; 15407695, 2071790…
+## $ month        &lt;ord&gt; Dec, Dec, Dec, De…
+## $ day          &lt;ord&gt; Fri, Thu, Wed, Tu…
+## $ qtr          &lt;int&gt; 4, 4, 4, 4, 4, 4,…
+## $ top10grossM  &lt;dbl&gt; 27.60, 35.02, 34.…
+## $ num1grossM   &lt;dbl&gt; 15.41, 20.72, 20.…
+```
+
+]
+
+---
+
+***TurningPoint Session ID: bua455s22***
+
+### Week 5  In-class Exercises (TP L9 - Q1 &amp; Q2)
+
+***TurningPoint Session ID: bua455s22***
+
+**`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
+- By default, `month` and `day` are ordinal factor variables (`&lt;ord&gt;`).  
+- What is the default data type for `qtr` (quarter)?
+
+A. character `&lt;chr&gt;`
+B. decimal (double precision) `&lt;dbl&gt;`
+C. factor `&lt;fct&gt;`
+D. integer `&lt;int&gt;`
+
+&lt;br&gt;
+
+**`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
+
+- `qtr = quarter(date)`
+
+Fill in the blank to convert this variable to a quarter as you create it:
+
+- `qtr = _____(quarter(date))`
+
+
+---
+
+### Function Demonstration - Multiple Years
+
+- Below we see that once we have the code set, we can import 2, or 4 or even 10 data sets very efficiently.
+
+
+```r
+bom21 &lt;- bom_basic("box_office_mojo_2021_tidy.csv")
+bom20 &lt;- bom_basic("box_office_mojo_2020_tidy.csv")
+bom19 &lt;- bom_basic("box_office_mojo_2019_tidy.csv")
+bom18 &lt;- bom_basic("box_office_mojo_2018_tidy.csv") |&gt; glimpse( width=60)
+```
+
+```
+## Rows: 365
+## Columns: 9
+## $ date         &lt;date&gt; 2018-12-31, 2018-12-30, 2018-12-29, …
+## $ top10gross   &lt;dbl&gt; 36240441, 50932176, 58118460, 5666776…
+## $ num_releases &lt;int&gt; 53, 51, 51, 51, 53, 52, 53, 49, 53, 5…
+## $ num1gross    &lt;dbl&gt; 10011638, 16440551, 18632907, 1704111…
+## $ month        &lt;ord&gt; Dec, Dec, Dec, Dec, Dec, Dec, Dec, De…
+## $ day          &lt;ord&gt; Mon, Sun, Sat, Fri, Thu, Wed, Tue, Mo…
+## $ qtr          &lt;int&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4…
+## $ top10grossM  &lt;dbl&gt; 36.24, 50.93, 58.12, 56.67, 51.67, 55…
+## $ num1grossM   &lt;dbl&gt; 10.01, 16.44, 18.63, 17.04, 14.62, 16…
+```
+
+
+
+---
+### Using Function to Make Repeatable Plots
+
+- A good practice is to divide tasks into smaller functions
+
+  - Recall the Area Plot we discussed in Week 3
+  - This Function modifies the data for the plot:
+
+
+```r
+bom21_line_area_orig &lt;- bom21 |&gt;
+  select(date, top10grossM, num1grossM) |&gt;                  # select variables
+  rename(`Top 10` = top10grossM, `No. 1` = num1grossM) |&gt;   # rename for plot
+  pivot_longer(cols=`Top 10`:`No. 1`,                       # reshape data  
+               names_to = "type", values_to = "grossM") |&gt;
+  mutate(type=factor(type, levels=c("Top 10", "No. 1")))    # convert type of gross to a factor
+```
+
+
+```r
+bom_line_area &lt;- function(data_in){
+  d_out &lt;- data_in |&gt;
+  select(date, top10grossM, num1grossM) |&gt;                  
+  rename(`Top 10` = top10grossM, `No. 1` = num1grossM) |&gt;   
+  pivot_longer(cols=`Top 10`:`No. 1`,                       
+               names_to = "type", values_to = "grossM") |&gt;
+  mutate(type=factor(type, levels=c("Top 10", "No. 1"))) 
+  d_out
+}
+
+bom21_line_area &lt;- bom_line_area(bom21)   # creates plot dataset for 2021
+bom20_line_area &lt;- bom_line_area(bom20)   # creates plot dataset for 2020
+```
+
+---
+
+#### Next, we will create a function for the area plot code
+
+- Functions are very useful for plots so that you don't have to keep recreating the code for the same data.
+
+#### Complete Formatted Area Plot Code:
+- The only text that changes from year to year is the subtitle.
+
+
+```r
+*area_plt21_orig &lt;- bom21_line_area |&gt;
+* ggplot() +
+* geom_area(aes(x=date, y=grossM, fill=type), size=1) +
+  theme_classic() + 
+  scale_fill_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", fill="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle="Jan. 1, 2021 - Dec. 31, 2021",
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+```
+
+---
+
+&lt;img src="docs_files/figure-html/display of area plot-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+### Area Plot Function
+
+
+```r
+area_plt&lt;- function(data_in, yr){
+* data_in |&gt;
+* ggplot() +
+* geom_area(aes(x=date, y=grossM, fill=type), size=1) +
+  theme_classic() + 
+  scale_fill_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", fill="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle=paste("Jan. 1,", yr,"- Dec. 31,", yr),
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+}
+```
+
+---
+
+### Line Plot Function 
+- almost identical to Area Plot Function
+
+```r
+line_plt&lt;- function(data_in, yr){
+* data_in |&gt;
+* ggplot() +
+* geom_line(aes(x=date, y=grossM, color=type), size=1) +
+  theme_classic() + 
+  scale_color_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", color="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle=paste("Jan. 1,", yr,"- Dec. 31,", yr),
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+}
+```
+
+
+---
+
+
+```r
+bom21_line_area &lt;- bom_line_area(bom21)
+area_plt(bom21_line_area, "2021")
+```
+
+&lt;img src="docs_files/figure-html/data and area plot 2021-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+---
+
+
+```r
+bom21_line_area &lt;- bom_line_area(bom20)
+area_plt(bom21_line_area, "2020")
+```
+
+&lt;img src="docs_files/figure-html/data and area plot 2020-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+bom19_line_area &lt;- bom_line_area(bom19)
+line_plt(bom19_line_area, "2019")
+```
+
+&lt;img src="docs_files/figure-html/data and line plot 2019-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+---
+
+
+```r
+bom18_line_area &lt;- bom_line_area(bom18)
+line_plt(bom18_line_area, "2018")
+```
+
+&lt;img src="docs_files/figure-html/data and line plot 2020-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+.pull-left[
+
+### Preview of Next week
+
+- Cleaning Messy Data from Box Office Mojo Website
+
+- Examining/Cleaning Bureau of Labor Statistics data
+
+- Writing functions to automate data cleaning
+
+- Joining data from multiple datasets
+
+- HW 4 will be assigned
+
+- No class on Thursday, October 6th
+
+]
+
+.pull-right[
+
+![](docs_files/images/owl.png)
+
+]
+
+
+
+---
+
+background-image: url("docs_files/images/tired_panda_faded.png")
+background-size: cover
+
+.pull-left[
+
+### **Key Points from Week 5**
+
+.bg-azure.b--dark_cyan.ba.bw2.br3.shadow-5.ph2[
+
+**Review for Quiz 1**
+
+- Review Practice Questions
+
+- Drop into Office Hours if you have additional questions.
+
+&lt;br&gt;
+
+**Automating Data Management and Plots with Functions**
+
+- Anatomy of a Function is always consistent
+
+- Functions are useful for repetitive tasks
+  e.g. Same data source, but multiple years
+
+- Divide task into smaller tasks and create a function for each task
+
+- Fully develop and check code to complete tasks, then convert to function.
+
+
+
+]
+
+]
+
+.pull-right[
+
+.bg-azure.b--dark_cyan.ba.bw2.br3.shadow-5.ph3[
+**You may submit an 'Engagement Question or Comment' about Week 5 (Lecture 9) until Tuesday, 9/27, at midnight on Blackboard.**
+]
+
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%/%total%",
+"highlightStyle": "tomorrow-night-bright",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true,
+"keep_md": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
