@@ -1,0 +1,431 @@
+---
+title: "BUA 455 - Week 5: Cheat Sheets, Functions, and Review"
+author: "Penelope Pooler Eisenbies"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    code_folding: hide
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+---
+
+
+```{r setup, include=TRUE}
+
+# this line specifies options for default options for all R Chunks
+knitr::opts_chunk$set(echo=T, 
+                      highlight=T)
+
+# suppress scientific notation
+options(scipen=100)
+
+# install helper package (pacman) if needed
+if (!require("pacman")) install.packages("pacman", repos = "http://lib.stat.cmu.edu/R/CRAN/")
+
+# install and load required packages
+# pacman should be first package in parentheses and then list others
+pacman::p_load(pacman, tidyverse, gridExtra, magrittr, lubridate, 
+               knitr, kableExtra)
+
+# verify packages (comment out in finished documents)
+p_loaded()
+
+```
+
+
+---
+
+### Quiz 1 on Thursday 9/29
+
+- Weeks 1 - 4 (Lectures 1 - 8)
+  
+  - Quiz questions will be similar (but not identical) to Practice Questions
+  
+  - Mix of R datasets and imported datasets 
+  
+    - I will provide R code to import data
+    
+    - Quiz Template and data files will be provided in Zipped project 
+    
+    - Review Practice Questions, HW assignments, and Demo Videos
+    
+    - **You will be required to download, unzip, and and save a project to your computer (not in Downloads), as part of Quiz 1.**
+
+---
+
+### R Online Resources
+
+- Some of what we have covered: (See Week 4 ofr more complete Review)
+
+  - R projects and file structure
+  
+  - Working R Markdown
+  
+  - Working with 'clean' data using the `dplyr` package
+  
+    `read_csv`, `filter`, `select`, `slice`, `factor`
+    
+  - Augmenting these commands with operators such as `!`, `%in%`, `==`
+  
+  - Using pipes, `|>` to make data management more efficient
+  
+- There are excellent online resources for these topics
+
+- For a reminder of operators Here are two good links:
+  - **[tutorials point](https://www.tutorialspoint.com/r/r_operators.htm)**  
+  - **[Quick-R](https://www.statmethods.net/management/operators.html)**
+  
+Also: you can always google `R Operators`
+    
+- For R Markdown and `dplyr` commands there are R Cheat Sheets
+  - **[Curated List of Text Resources for BUA 455 - Updated 9/26/22](https://docs.google.com/document/d/1qdqO7MTq7scYhFydkJuhA7JIUVQNldNXqMBOspXlNZk/edit?usp=sharing)**
+  
+
+---
+
+
+### Creating a Function
+
+- Any task in R can be converted to a function.
+
+- If you are only doing something once or twice, this is not needed.
+
+- If you are doing the same tasks 5 or more times, this is very useful
+
+- Best Practice:
+
+  - Develop and refine the code to complete your tasks
+  
+  - Subdivide the larger tasks into smaller shorter tasks
+
+#### Aanatomy of a Function:
+
+```
+Function_Name <- function(input_1, input_2, etc){
+   output <- command 1 to do "stuff" to inputs |>
+             command 2 to do "stuff" to inputs |>
+             command 3 to do "stuff" to inputs |> etc.
+   output  # end with name of output so that it is "kicked out" of function
+}
+
+```
+#### Alternate Anatomy for Plot Functions: don't save as an output object within function (see example this lecture)
+
+
+```{r bom_cln_function, echo=F, eval=F, include=F}
+
+bom_cln <- function(data_file, yr, out_file){
+  d <- read_csv(data_file, show_col_types = F, skip=11) |>
+  select(1,4,7,9) |>
+  rename("date" = "Date", 
+         "top10gross" = "Top 10 Gross", 
+         "num_releases" = "Releases",
+         "num1gross" = "Gross") |>
+  filter(!is.na(top10gross)) |>
+  mutate(date = dmy(paste(date,yr)),
+         top10gross = gsub(pattern="$", replacement="", x=top10gross, fixed=T),
+         top10gross = gsub(pattern=",", replacement="", x=top10gross, fixed=T) |>
+           as.numeric(),
+         num1gross = gsub(pattern="$", replacement="", x=num1gross, fixed=T),
+         num1gross = gsub(pattern=",", replacement="", x=num1gross, fixed=T) |>
+           as.numeric()) |>
+  write_csv(out_file)
+}
+
+bom_cln("box_office_mojo_2021.csv", 2021, "box_office_mojo_2021_tidy.csv")
+bom_cln("box_office_mojo_2020.csv", 2020, "box_office_mojo_2020_tidy.csv")
+bom_cln("box_office_mojo_2019.csv", 2019, "box_office_mojo_2019_tidy.csv")
+bom_cln("box_office_mojo_2018.csv", 2018, "box_office_mojo_2018_tidy.csv")
+
+```
+
+---
+
+---
+
+Example and Review: Recall the steps we did to Box Office Mojo data
+
+- Below I show a preview of using the `lubridate` functions to create: 
+  - date variable and month, day, and quarter variables creatd from date
+
+```{r bom_import}
+bom21_orig <- read_csv("box_office_mojo_2021_tidy.csv", show_col_types = F) |>
+  mutate(date = ymd(date),                              # converts ymd date text to date var
+         month = month(date, label = T, abbr = T),      # creates month var from date var
+         day = wday(date, label=T, abbr = T),           # creates wkday var from date var
+         qtr = quarter(date),                           # creates quarter var from date var
+         num_releases = as.integer(num_releases),
+         top10grossM = (top10gross/1000000) |> round(2),
+         num1grossM = (num1gross/1000000) |> round(2))
+```
+
+Below, `bom_basic` is a function that completes the tasks above:
+```{r bom_import basic function}
+bom_basic <- function(data_file) {
+  d_out <- read_csv(data_file, show_col_types = F) |>
+  mutate(date = ymd(date),
+         month = month(date, label = T, abbr = T),
+         day = wday(date, label=T, abbr = T),
+         qtr = quarter(date),
+         num_releases = as.integer(num_releases),
+         top10grossM = (top10gross/1000000) |> round(2),
+         num1grossM = (num1gross/1000000) |> round(2))
+  d_out
+}
+
+```
+
+---
+
+### What does the `bom_basic` function do?
+
+```{r import}
+b21 <- read_csv("box_office_mojo_2021_tidy.csv",
+                show_col_types = F) |>
+  glimpse(width=40)
+
+```
+
+
+```{r import function}
+bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
+  glimpse(width=40)
+
+```
+
+
+---
+
+***TurningPoint Session ID: bua455s22***
+
+### Week 5  In-class Exercises (TP L9 - Q1 & Q2)
+
+***TurningPoint Session ID: bua455s22***
+
+**`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
+- By default, `month` and `day` are ordinal factor variables (`<ord>`).  
+- What is the default data type for `qtr` (quarter)?
+
+A. character `<chr>`
+B. decimal (double precision) `<dbl>`
+C. factor `<fct>`
+D. integer `<int>`
+
+<br>
+
+**`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
+
+- `qtr = quarter(date)`
+
+Fill in the blank to convert this variable to a quarter as you create it:
+
+- `qtr = _____(quarter(date))`
+
+
+---
+
+### Function Demonstration - Multiple Years
+
+- Below we see that once we have the code set, we can import 2, or 4 or even 10 data sets very efficiently.
+
+```{r import all 4 datasets}
+bom21 <- bom_basic("box_office_mojo_2021_tidy.csv")
+bom20 <- bom_basic("box_office_mojo_2020_tidy.csv")
+bom19 <- bom_basic("box_office_mojo_2019_tidy.csv")
+bom18 <- bom_basic("box_office_mojo_2018_tidy.csv") |> glimpse( width=60)
+
+```
+
+---
+
+### Using Function to Make Repeatable Plots
+
+- A good practice is to divide tasks into smaller functions
+
+  - Recall the Area Plot we discussed in Week 3
+  - This Function modifies the data for the plot:
+
+```{r data mgmt for area plot}
+bom21_line_area_orig <- bom21 |>
+  select(date, top10grossM, num1grossM) |>                  # select variables
+  rename(`Top 10` = top10grossM, `No. 1` = num1grossM) |>   # rename for plot
+  pivot_longer(cols=`Top 10`:`No. 1`,                       # reshape data  
+               names_to = "type", values_to = "grossM") |>
+  mutate(type=factor(type, levels=c("Top 10", "No. 1")))    # convert type of gross to a factor
+
+```
+
+
+```{r data mgmt fuction for area plot}
+bom_line_area <- function(data_in){
+  d_out <- data_in |>
+  select(date, top10grossM, num1grossM) |>                  
+  rename(`Top 10` = top10grossM, `No. 1` = num1grossM) |>   
+  pivot_longer(cols=`Top 10`:`No. 1`,                       
+               names_to = "type", values_to = "grossM") |>
+  mutate(type=factor(type, levels=c("Top 10", "No. 1"))) 
+  d_out
+}
+
+bom21_line_area <- bom_line_area(bom21)   # creates plot dataset for 2021
+bom20_line_area <- bom_line_area(bom20)   # creates plot dataset for 2020
+```
+
+---
+
+#### Next, we will create a function for the area plot code
+
+- Functions are very useful for plots so that you don't have to keep recreating the code for the same data.
+
+#### Complete Formatted Area Plot Code:
+- The only text that changes from year to year is the subtitle.
+
+```{r bom area plot code}
+area_plt21_orig <- bom21_line_area |>                                  
+  ggplot() +                                                           
+  geom_area(aes(x=date, y=grossM, fill=type), size=1) +                
+  theme_classic() + 
+  scale_fill_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", fill="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle="Jan. 1, 2021 - Dec. 31, 2021",
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+```
+
+---
+
+```{r display of area plot, echo=F, fig.dim=c(14,8), fig.align='center'}
+area_plt21_orig
+```
+
+---
+
+### Area Plot Function
+
+```{r}
+area_plt<- function(data_in, yr){
+  data_in |>                                                  
+  ggplot() +                                                
+  geom_area(aes(x=date, y=grossM, fill=type), size=1) +     
+  theme_classic() + 
+  scale_fill_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", fill="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle=paste("Jan. 1,", yr,"- Dec. 31,", yr),
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+}
+
+```
+
+---
+
+### Line Plot Function 
+- almost identical to Area Plot Function
+```{r}
+line_plt<- function(data_in, yr){
+  data_in |>                                               
+  ggplot() +                                               
+  geom_line(aes(x=date, y=grossM, color=type), size=1) +   
+  theme_classic() + 
+  scale_color_manual(values=c("blue", "lightblue")) +   
+  labs(x="Date", y = "Gross ($Mill)", color="",
+       title="Top 10 and No. 1 Movie Gross by Date", 
+       subtitle=paste("Jan. 1,", yr,"- Dec. 31,", yr),
+       caption="Data Source:www.boxoffice.mojo.com") + 
+  theme(legend.position="bottom",
+        legend.text = element_text(size = 12),
+        plot.title = element_text(size = 20),
+        axis.title = element_text(size=18),
+        axis.text = element_text(size=15),
+        plot.caption = element_text(size = 10),
+        plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+}
+
+```
+
+
+---
+
+```{r data and area plot 2021, fig.dim=c(14,7), fig.align='center'}
+bom21_line_area <- bom_line_area(bom21)
+area_plt(bom21_line_area, "2021")
+```
+
+---
+
+```{r data and area plot 2020, fig.dim=c(14,7), fig.align='center'}
+bom21_line_area <- bom_line_area(bom20)
+area_plt(bom21_line_area, "2020")
+```
+
+---
+
+```{r data and line plot 2019, fig.dim=c(14,7), fig.align='center'}
+bom19_line_area <- bom_line_area(bom19)
+line_plt(bom19_line_area, "2019")
+```
+
+---
+
+```{r data and line plot 2020, fig.dim=c(14,7), fig.align='center'}
+bom18_line_area <- bom_line_area(bom18)
+line_plt(bom18_line_area, "2018")
+```
+
+---
+
+### Preview of Next week
+
+- Cleaning Messy Data from Box Office Mojo Website
+
+- Examining/Cleaning Bureau of Labor Statistics data
+
+- Writing functions to automate data cleaning
+
+- Joining data from multiple datasets
+
+- HW 4 will be assigned
+
+- No class on Thursday, October 6th
+
+
+---
+
+### **Key Points from Week 5**
+
+**Review for Quiz 1**
+
+- Review Practice Questions
+
+- Drop into Office Hours if you have additional questions.
+
+<br>
+
+**Automating Data Management and Plots with Functions**
+
+- Anatomy of a Function is always consistent
+
+- Functions are useful for repetitive tasks
+  e.g. Same data source, but multiple years
+
+- Divide task into smaller tasks and create a function for each task
+
+- Fully develop and check code to complete tasks, then convert to function.
+
+
+**You may submit an 'Engagement Question or Comment' about Week 5 (Lecture 9) until Tuesday, 9/27, at midnight on Blackboard.**
