@@ -342,7 +342,7 @@ D. integer `<int>`
 
 - `qtr = quarter(date)`
 
-Fill in the blank to convert this variable to a quarter as you create it:
+Fill in the blank to convert this variable to a factor variable as you create it:
 
 - `qtr = _____(quarter(date))`
 
