@@ -36,7 +36,7 @@ p_loaded()
 
 ---
 
-### Quiz 1 on Thursday 9/29
+### Quiz 1 on Thursday 2/16
 
 - Weeks 1 - 4 (Lectures 1 - 8)
   
@@ -79,7 +79,7 @@ p_loaded()
 Also: you can always google `R Operators`
     
 - For R Markdown and `dplyr` commands there are R Cheat Sheets
-  - **[Curated List of Text Resources for BUA 455 - Updated 9/26/22](https://docs.google.com/document/d/1qdqO7MTq7scYhFydkJuhA7JIUVQNldNXqMBOspXlNZk/edit?usp=sharing)**
+  - **[Curated List of Text Resources for BUA 455](https://docs.google.com/document/d/1qdqO7MTq7scYhFydkJuhA7JIUVQNldNXqMBOspXlNZk/edit?usp=sharing)**
   
 
 ---
@@ -197,11 +197,10 @@ bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
 
 ---
 
-***TurningPoint Session ID: bua455s22***
+***Session ID: bua455s23***
 
 ### Week 5  In-class Exercises (TP L9 - Q1 & Q2)
 
-***TurningPoint Session ID: bua455s22***
 
 **`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
 - By default, `month` and `day` are ordinal factor variables (`<ord>`).  
@@ -401,8 +400,6 @@ line_plt(bom18_line_area, "2018")
 
 - HW 4 will be assigned
 
-- No class on Thursday, October 6th
-
 
 ---
 
@@ -428,4 +425,4 @@ line_plt(bom18_line_area, "2018")
 - Fully develop and check code to complete tasks, then convert to function.
 
 
-**You may submit an 'Engagement Question or Comment' about Week 5 (Lecture 9) until Tuesday, 9/27, at midnight on Blackboard.**
+You may submit an 'Engagement Question' about each lecture until midnight on the day of the lecture. **A minimum of four submissions are required during the semester.**
