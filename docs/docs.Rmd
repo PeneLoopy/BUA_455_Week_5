@@ -157,25 +157,6 @@ class: bottom, right
 
 ---
 
-### Quiz 1 on Thursday 2/16
-
-- Weeks 1 - 4 (Lectures 1 - 8)
-  
-  - Quiz questions will be similar (but not identical) to Practice Questions
-  
-  - Mix of R datasets and imported datasets 
-  
-    - I will provide R code to import data
-    
-    - Quiz Template and data files will be provided in Zipped project 
-    
-    - Review Practice Questions, HW assignments, and Demo Videos
-    
-    - **You will be required to download, unzip, and and save a project to your computer (not in Downloads), as part of Quiz 1.**
-
-
----
-
 ### R Online Resources
 
 - Some of what we have covered: (See Week 4 fOr more complete Review)
@@ -323,7 +304,7 @@ bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
 
 ---
 
-***Session ID: bua455s23***
+***Session ID: bua455f23***
 
 ### Week 5  In-class Exercises (TP L9 - Q1 & Q2)
 
@@ -343,7 +324,7 @@ D. integer `<int>`
 
 class: middle
 
-***Session ID: bua455s23***
+***Session ID: bua455f23***
 
 **`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
 
