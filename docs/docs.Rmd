@@ -157,6 +157,25 @@ class: bottom, right
 
 ---
 
+
+### Quiz 1 on Thursday 2/15
+
+- Weeks 1 - 4 (Lectures 1 - 8)
+  
+  - Quiz questions will be similar (but not identical) to Practice Questions
+  
+  - Mix of R datasets and imported datasets 
+  
+    - I will provide R code to import data
+    
+    - Quiz Template and data files will be provided in Zipped project 
+    
+    - Review Practice Questions, HW assignments, and Demo Videos
+    
+    - **You will be required to download, unzip, and and save a project to your computer (not in Downloads), as part of Quiz 1.**
+
+---
+
 ### R Online Resources
 
 - Some of what we have covered: (See Week 4 fOr more complete Review)
@@ -213,8 +232,6 @@ Function_Name <- function(input_1, input_2, etc){
 }
 
 ```
-#### Alternate Anatomy for Plot Functions: don't save as an output object within function (see example this lecture)
-
 
 ```{r bom_cln_function, echo=F, eval=F, include=F}
 
@@ -245,7 +262,7 @@ bom_cln("box_office_mojo_2018.csv", 2018, "box_office_mojo_2018_tidy.csv")
 
 ---
 
-Example and Review: Recall the steps we did to Box Office Mojo data
+### Example and Review: Recall steps done to  Box Office Mojo data
 
 - Below I show a preview of using the `lubridate` functions to create: 
   - date variable and month, day, and quarter variables creatd from date
@@ -304,9 +321,9 @@ bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
 
 ---
 
-***Session ID: bua455f23***
+***Session ID: bua455s24***
 
-### Week 5  In-class Exercises (TP L9 - Q1 & Q2)
+### Week 5  In-class Exercises (L9 - Q1 & Q2)
 
 **`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
 - By default, `month` and `day` are ordinal factor variables (`<ord>`).  
@@ -324,7 +341,7 @@ D. integer `<int>`
 
 class: middle
 
-***Session ID: bua455f23***
+***Session ID: bua455s24***
 
 **`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
 
@@ -411,6 +428,7 @@ area_plt21_orig <- bom21_line_area |>                                  #<<
         axis.text = element_text(size=15),
         plot.caption = element_text(size = 10),
         plot.background = element_rect(colour = "darkgrey", fill=NA, size=2))
+
 ```
 
 ---
@@ -447,12 +465,14 @@ area_plt<- function(data_in, yr){
 ---
 
 ### Line Plot Function 
+
 - almost identical to Area Plot Function
+
 ```{r}
 line_plt<- function(data_in, yr){
-  data_in |>                                               #<<
-  ggplot() +                                               #<<
-  geom_line(aes(x=date, y=grossM, color=type), size=1) +   #<<
+  data_in |>                                                    #<<
+  ggplot() +                                                    #<<
+  geom_line(aes(x=date, y=grossM, color=type), linewidth=1) +   #<<
   theme_classic() + 
   scale_color_manual(values=c("blue", "lightblue")) +   
   labs(x="Date", y = "Gross ($Mill)", color="",
@@ -476,12 +496,15 @@ line_plt<- function(data_in, yr){
 ```{r data and area plot 2021, fig.dim=c(14,7), fig.align='center'}
 bom21_line_area <- bom_line_area(bom21)
 area_plt(bom21_line_area, "2021")
+
 ```
+
 ---
 
 ```{r data and area plot 2020, fig.dim=c(14,7), fig.align='center'}
 bom21_line_area <- bom_line_area(bom20)
 area_plt(bom21_line_area, "2020")
+
 ```
 
 ---
@@ -489,12 +512,15 @@ area_plt(bom21_line_area, "2020")
 ```{r data and line plot 2019, fig.dim=c(14,7), fig.align='center'}
 bom19_line_area <- bom_line_area(bom19)
 line_plt(bom19_line_area, "2019")
+
 ```
+
 ---
 
 ```{r data and line plot 2020, fig.dim=c(14,7), fig.align='center'}
 bom18_line_area <- bom_line_area(bom18)
 line_plt(bom18_line_area, "2018")
+
 ```
 
 
@@ -502,7 +528,7 @@ line_plt(bom18_line_area, "2018")
 
 .pull-left[
 
-### Preview of Next week
+### Preview of Next week after Quiz 1
 
 - Cleaning Messy Data from Box Office Mojo Website
 

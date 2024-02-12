@@ -4,7 +4,7 @@
     <title>BUA 455 - Week 5</title>
     <meta charset="utf-8" />
     <meta name="author" content="Penelope Pooler Eisenbies" />
-    <meta name="date" content="2023-10-02" />
+    <meta name="date" content="2024-02-12" />
     <script src="docs_files/header-attrs/header-attrs.js"></script>
     <link href="docs_files/panelset/panelset.css" rel="stylesheet" />
     <script src="docs_files/panelset/panelset.js"></script>
@@ -49,9 +49,28 @@ class: bottom, right
 
 #### Penelope Pooler Eisenbies
 
-#### 2023-10-02
+#### 2024-02-12
 
 [Wikipedia Sloth Page](https://en.wikipedia.org/wiki/Sloth)
+
+---
+
+
+### Quiz 1 on Thursday 2/15
+
+- Weeks 1 - 4 (Lectures 1 - 8)
+  
+  - Quiz questions will be similar (but not identical) to Practice Questions
+  
+  - Mix of R datasets and imported datasets 
+  
+    - I will provide R code to import data
+    
+    - Quiz Template and data files will be provided in Zipped project 
+    
+    - Review Practice Questions, HW assignments, and Demo Videos
+    
+    - **You will be required to download, unzip, and and save a project to your computer (not in Downloads), as part of Quiz 1.**
 
 ---
 
@@ -111,14 +130,12 @@ Function_Name &lt;- function(input_1, input_2, etc){
 }
 
 ```
-#### Alternate Anatomy for Plot Functions: don't save as an output object within function (see example this lecture)
-
 
 
 
 ---
 
-Example and Review: Recall the steps we did to Box Office Mojo data
+### Example and Review: Recall steps done to  Box Office Mojo data
 
 - Below I show a preview of using the `lubridate` functions to create: 
   - date variable and month, day, and quarter variables creatd from date
@@ -201,9 +218,9 @@ bom21 &lt;- bom_basic("box_office_mojo_2021_tidy.csv") |&gt;
 
 ---
 
-***Session ID: bua455f23***
+***Session ID: bua455s24***
 
-### Week 5  In-class Exercises (TP L9 - Q1 &amp; Q2)
+### Week 5  In-class Exercises (L9 - Q1 &amp; Q2)
 
 **`1.`** Using`lubridate` commands we converted `date` to date format (if needed) and created `month` `day` and `qtr` variables from `date`. 
 - By default, `month` and `day` are ordinal factor variables (`&lt;ord&gt;`).  
@@ -221,7 +238,7 @@ D. integer `&lt;int&gt;`
 
 class: middle
 
-***Session ID: bua455f23***
+***Session ID: bua455s24***
 
 **`2.`**  Here is the line that creates `qtr` within the mutate statement. The quarter command is part of the `lubridate` package.
 
@@ -358,13 +375,15 @@ area_plt&lt;- function(data_in, yr){
 ---
 
 ### Line Plot Function 
+
 - almost identical to Area Plot Function
+
 
 ```r
 line_plt&lt;- function(data_in, yr){
 * data_in |&gt;
 * ggplot() +
-* geom_line(aes(x=date, y=grossM, color=type), size=1) +
+* geom_line(aes(x=date, y=grossM, color=type), linewidth=1) +
   theme_classic() + 
   scale_color_manual(values=c("blue", "lightblue")) +   
   labs(x="Date", y = "Gross ($Mill)", color="",
@@ -391,6 +410,7 @@ area_plt(bom21_line_area, "2021")
 ```
 
 &lt;img src="docs_files/figure-html/data and area plot 2021-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
 ---
 
 
@@ -410,6 +430,7 @@ line_plt(bom19_line_area, "2019")
 ```
 
 &lt;img src="docs_files/figure-html/data and line plot 2019-1.png" width="1008" style="display: block; margin: auto;" /&gt;
+
 ---
 
 
@@ -425,7 +446,7 @@ line_plt(bom18_line_area, "2018")
 
 .pull-left[
 
-### Preview of Next week
+### Preview of Next week after Quiz 1
 
 - Cleaning Messy Data from Box Office Mojo Website
 

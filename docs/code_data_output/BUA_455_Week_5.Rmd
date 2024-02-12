@@ -36,7 +36,7 @@ p_loaded()
 
 ---
 
-### Quiz 1 on Thursday 2/16
+### Quiz 1 on Thursday 2/15
 
 - Weeks 1 - 4 (Lectures 1 - 8)
   
@@ -110,7 +110,6 @@ Function_Name <- function(input_1, input_2, etc){
 }
 
 ```
-#### Alternate Anatomy for Plot Functions: don't save as an output object within function (see example this lecture)
 
 
 ```{r bom_cln_function, echo=F, eval=F, include=F}
@@ -142,9 +141,7 @@ bom_cln("box_office_mojo_2018.csv", 2018, "box_office_mojo_2018_tidy.csv")
 
 ---
 
----
-
-Example and Review: Recall the steps we did to Box Office Mojo data
+### Example and Review: Recall steps done to  Box Office Mojo data
 
 - Below I show a preview of using the `lubridate` functions to create: 
   - date variable and month, day, and quarter variables creatd from date
@@ -197,7 +194,7 @@ bom21 <- bom_basic("box_office_mojo_2021_tidy.csv") |>
 
 ---
 
-***Session ID: bua455s23***
+***Session ID: bua455s24***
 
 ### Week 5  In-class Exercises (TP L9 - Q1 & Q2)
 
